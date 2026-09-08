@@ -112,8 +112,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, 
         webView.navigationDelegate = self
         webView.allowsBackForwardNavigationGestures = false
 
+        let visible = NSScreen.main?.visibleFrame ?? NSRect(x: 0, y: 0, width: 1200, height: 900)
+        let w = min(1180, visible.width * 0.82)
+        let h = min(900, visible.height * 0.90)
         window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 1000, height: 820),
+            contentRect: NSRect(x: 0, y: 0, width: w, height: h),
             styleMask: [.titled, .closable, .miniaturizable, .resizable],
             backing: .buffered,
             defer: false
@@ -121,9 +124,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, 
         window.title = "SAT Practice"
         window.minSize = NSSize(width: 380, height: 480)
         window.contentView = webView
+        // Without .fullScreenPrimary the green button only zooms and the
+        // "Enter Full Screen" menu item stays greyed out.
+        window.collectionBehavior = [.fullScreenPrimary, .managed]
+        window.tabbingMode = .disallowed
         window.setFrameAutosaveName("SATPracticeWindow")
         window.center()
         window.makeKeyAndOrderFront(nil)
+        // Give the web view focus so 1-4 / Enter / N work on launch without
+        // having to click into the page first.
+        window.makeFirstResponder(webView)
 
         buildMenu()
         webView.load(URLRequest(url: URL(string: "\(ORIGIN)/index.html")!))
@@ -158,7 +168,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, 
             webView.callAsyncJavaScript(probe, in: nil, in: .page) { result in
                 switch result {
                 case .success(let value):
+                    let fs = self.window.collectionBehavior.contains(.fullScreenPrimary)
+                    let focused = self.window.firstResponder === self.webView
+                        || self.window.firstResponder is NSView
                     print("SELFTEST \(value)")
+                    print("SELFTEST window fullScreenPrimary=\(fs) resizable=\(self.window.styleMask.contains(.resizable)) focusedView=\(focused)")
                     exit(0)
                 case .failure(let error):
                     print("SELFTEST FAILED \(error)")
@@ -262,13 +276,20 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, 
         view.addItem(withTitle: "Zoom In", action: #selector(zoomIn), keyEquivalent: "+")
         view.addItem(withTitle: "Zoom Out", action: #selector(zoomOut), keyEquivalent: "-")
         view.addItem(.separator())
-        view.addItem(withTitle: "Enter Full Screen", action: #selector(NSWindow.toggleFullScreen(_:)), keyEquivalent: "f")
+        let fs = NSMenuItem(
+            title: "Enter Full Screen",
+            action: #selector(NSWindow.toggleFullScreen(_:)),
+            keyEquivalent: "f")
+        fs.keyEquivalentModifierMask = [.control, .command]  // the macOS standard
+        view.addItem(fs)
         viewItem.submenu = view
         main.addItem(viewItem)
 
         let windowItem = NSMenuItem()
         let win = NSMenu(title: "Window")
         win.addItem(withTitle: "Minimize", action: #selector(NSWindow.performMiniaturize(_:)), keyEquivalent: "m")
+        win.addItem(withTitle: "Zoom", action: #selector(NSWindow.performZoom(_:)), keyEquivalent: "")
+        win.addItem(.separator())
         win.addItem(withTitle: "Close", action: #selector(NSWindow.performClose(_:)), keyEquivalent: "w")
         windowItem.submenu = win
         main.addItem(windowItem)

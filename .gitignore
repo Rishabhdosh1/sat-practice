@@ -5,3 +5,4 @@ dist/
 .vite/
 __pycache__/
 *.pyc
+desktop/build/

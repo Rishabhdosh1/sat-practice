@@ -64,9 +64,16 @@ wired up and waiting. See [docs/SOURCES.md](docs/SOURCES.md).
 
 ## Using it
 
-**Keyboard:** `1`–`4` pick a choice · `Enter` submit, then `Enter`/`N` for next.
+**Keyboard:** `1`–`4` pick a choice · `Enter` submit, then `Enter`/`N` for next ·
+`←`/`→` to move between questions. Full screen is the green button or `⌃⌘F`.
 
-**Filters** (top right) are faceted, like a good search UI:
+**Layout:** filters live in a persistent sidebar on a wide window and slide in
+as a sheet on a narrow one. The question column holds a fixed reading measure
+and stays centred in whatever space is left, so full screen widens the margins
+rather than stretching the lines. The action bar is part of the layout, not
+floating over it, so it never covers the last choice.
+
+**Filters** are faceted, like a good search UI:
 
 - **Counts are contextual.** Every option shows how many questions you'd get if
   you picked it *given everything else already selected*, so you can't assemble
