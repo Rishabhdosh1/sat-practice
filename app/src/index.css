@@ -14,6 +14,15 @@ body,
 body {
   margin: 0;
   -webkit-text-size-adjust: 100%;
+  /* Painted explicitly: the native WKWebView shell has no page behind this, so
+     a transparent body shows the empty window through it. */
+  background: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background: #020617;
+  }
 }
 
 /* Stop iOS painting a grey flash over choices on tap. */

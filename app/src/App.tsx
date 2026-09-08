@@ -3,11 +3,13 @@ import { Dashboard } from './components/Dashboard'
 import { Desmos } from './components/Desmos'
 import { FiltersPanel } from './components/FiltersPanel'
 import { QuestionView } from './components/QuestionView'
+import { applyFilters, countActive, type FilterContext } from './lib/filter'
 import {
   exportHistory,
   FILTERS_STORAGE_KEY,
   parseHistory,
   seenQuestionIds,
+  statsBy,
   useAttempts,
   useNamedSets,
   usePersisted,
@@ -77,27 +79,20 @@ export default function App() {
   const seen = useMemo(() => seenQuestionIds(attempts), [attempts])
   const wrong = useMemo(() => wrongQuestionIds(attempts), [attempts])
 
+  const ctx: FilterContext = useMemo(() => ({ seen, wrong, sets }), [seen, wrong, sets])
+
   const matched = useMemo(() => {
-    const setIds = filters.sets.length
-      ? new Set(sets.filter((s) => filters.sets.includes(s.name)).flatMap((s) => s.questionIds))
-      : null
-
-    const out = all.filter((q) => {
-      if (filters.sections.length && !filters.sections.includes(q.section ?? '')) return false
-      if (filters.domains.length && !filters.domains.includes(q.domain ?? '')) return false
-      if (filters.skills.length && !filters.skills.includes(q.skill ?? '')) return false
-      if (filters.difficulties.length && !filters.difficulties.includes(q.difficulty ?? '(none)'))
-        return false
-      if (filters.tags.length && !q.tags.some((t) => filters.tags.includes(t))) return false
-      if (setIds && !setIds.has(q.id)) return false
-      if (filters.unseenOnly && seen.has(q.id)) return false
-      if (filters.wrongOnly && !wrong.has(q.id)) return false
-      if (filters.hideUnverified && q.source.trust !== 'official') return false
-      return true
-    })
-
+    const out = applyFilters(all, filters, ctx)
     return filters.shuffle ? shuffled(out, seed) : out
-  }, [all, filters, sets, seen, wrong, seed])
+  }, [all, filters, ctx, seed])
+
+  // The skill with the lowest accuracy, offered as a one-tap drill preset.
+  const weakestSkill = useMemo(() => {
+    const rows = statsBy(attempts, (id) => byId.get(id)?.skill ?? null).filter(
+      (r) => r.attempted >= 3,
+    )
+    return rows.length ? rows[0].key : null
+  }, [attempts, byId])
 
   // Keep the cursor inside the (possibly shrunken) result set.
   useEffect(() => {
@@ -176,8 +171,10 @@ export default function App() {
             className="rounded border border-slate-300 px-2 py-1 text-xs dark:border-slate-600"
           >
             Filters
-            {matched.length !== all.length && (
-              <span className="ml-1 opacity-60">{matched.length}</span>
+            {countActive(filters) > 0 && (
+              <span className="ml-1 rounded-full bg-slate-900 px-1.5 text-[10px] text-white dark:bg-white dark:text-slate-900">
+                {countActive(filters)}
+              </span>
             )}
           </button>
         </div>
@@ -188,6 +185,8 @@ export default function App() {
               <FiltersPanel
                 all={all}
                 filters={filters}
+                ctx={ctx}
+                weakestSkill={weakestSkill}
                 setFilters={(f) => {
                   if (f.shuffle && !filters.shuffle) setSeed(Date.now() % 100000)
                   setFilters(f)
@@ -204,12 +203,6 @@ export default function App() {
                 onDeleteSet={removeSet}
               />
               <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-slate-200 pt-3 text-xs dark:border-slate-700">
-                <button
-                  onClick={() => setFilters(EMPTY_FILTERS)}
-                  className="rounded-lg border border-slate-300 px-3 py-1.5 dark:border-slate-600"
-                >
-                  Reset filters
-                </button>
                 <button
                   onClick={doExport}
                   className="rounded-lg border border-slate-300 px-3 py-1.5 dark:border-slate-600"

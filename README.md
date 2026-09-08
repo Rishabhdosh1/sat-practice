@@ -8,13 +8,29 @@ have committed to one.
 
 ## Run it
 
+**As a Mac app** — already installed; launch **SAT Practice** from Spotlight or
+`/Applications`. To rebuild after changing anything:
+
 ```bash
-python3 -m ingest.run        # build the dataset (only needed when sources change)
+./desktop/build.sh --install
+```
+
+That re-runs ingest, rebuilds the web app, compiles the native shell, self-tests
+the bundle, and installs it. It's a real `.app` — 5.5 MB, no Electron, no server,
+no terminal window. A WKWebView with a custom URL scheme handler serves the
+build straight out of the bundle; your history lives in the app's own
+persistent store and survives rebuilds.
+
+**In a browser** — useful for working on it, and the only way to use it from
+your phone:
+
+```bash
+python3 -m ingest.run        # only needed when the sources change
 cd app && npm install && npm run dev
 ```
 
-Then open http://localhost:5173. The dev server binds all interfaces, so the
-`Network:` URL it prints works from a phone on the same Wi-Fi.
+http://localhost:5173. The dev server binds all interfaces, so the `Network:`
+URL it prints works from a phone on the same Wi-Fi.
 
 ## What's in the dataset
 
@@ -50,16 +66,23 @@ wired up and waiting. See [docs/SOURCES.md](docs/SOURCES.md).
 
 **Keyboard:** `1`–`4` pick a choice · `Enter` submit, then `Enter`/`N` for next.
 
-**Filters** (top right) multi-select across section, domain, skill, difficulty
-and source set, plus:
+**Filters** (top right) are faceted, like a good search UI:
 
-- **Unseen only** — questions you have never answered, so you stop re-burning ones you know.
-- **Review my wrong answers** — everything whose *latest* attempt was wrong.
-- **Shuffle** — worth leaving on for the Latin-roots set, whose answer key is
-  badly skewed (A×94, B×56, C×3, D×0 — never D). Position is a giveaway otherwise.
-- **Official answers only** — hides the 153 unverified Latin-roots questions.
-- **Save as a set** — names the current filtered selection so you can come back
-  to it ("August 2026 additions").
+- **Counts are contextual.** Every option shows how many questions you'd get if
+  you picked it *given everything else already selected*, so you can't assemble
+  a combination that yields nothing. Options that would yield zero are dimmed
+  and disabled rather than hidden.
+- **Skills are grouped under their domain**, and pick a domain and the skill list
+  narrows to just that domain's. There's a search box for jumping straight to one.
+- **Active filters show as removable pills** at the top, with a live
+  "185 of 691 questions" count and one-tap Reset.
+- **Presets**: Unseen · My mistakes · Hard only · Official only, plus
+  **Drill \<skill\>** for your weakest skill once you've answered enough to have
+  a weakest one.
+- **Shuffle** is in the header. Worth leaving on for the Latin-roots set, whose
+  answer key is badly skewed (A×94, B×56, C×3, D×0 — never D).
+- **Save these N** names the current selection as a set you can filter back to
+  later ("August 2026 additions").
 
 **Dashboard** shows per-skill, per-domain and per-difficulty accuracy, weakest
 first, counting only your most recent attempt per question so re-drilling
@@ -81,8 +104,13 @@ ingest/          Python, stdlib + poppler only. Reads ~/Downloads read-only.
   run.py           entry point
   check.py         `python3 -m ingest.check` - 19 assertions, no deps
 app/             Vite + React + Tailwind
+  src/lib/filter.ts  faceted filtering + contextual counts
   public/data/     questions.json + ingest-report.json  <- ingest writes here
   public/figures/  rendered figure PNGs
+desktop/         the native macOS shell
+  SATPractice.swift  WKWebView + a scheme handler serving the bundled build
+  makeicon.swift     draws the app icon at build time
+  build.sh           ingest -> web build -> compile -> bundle -> self-test
 docs/SOURCES.md  what was ingested, what was rejected, and why
 ```
 
