@@ -15,7 +15,7 @@ from pathlib import Path
 
 from .extract import join_words, Word
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parent.parent / "app" / "public"
 DATA = ROOT / "data" / "questions.json"
 
 _failures: list[str] = []

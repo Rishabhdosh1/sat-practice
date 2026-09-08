@@ -25,7 +25,6 @@ passage apart from the question prompt.
 from __future__ import annotations
 
 import re
-import statistics
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -122,6 +121,7 @@ class RawQuestion:
     rationale: str | None = None
     question_lines: list[DocLine] = field(default_factory=list)
     page_width: float = 612.0
+    pitch: float = 0.0
     problems: list[str] = field(default_factory=list)
 
 
@@ -159,20 +159,51 @@ def _assign_columns(rows: list[Line], bounds: list[tuple[str, float]]) -> dict[s
     return out
 
 
-def _paragraphs(lines: list[DocLine], gap_factor: float = 1.55) -> list[str]:
+def document_pitch(lines: list[DocLine]) -> float:
+    """The document's single-line leading, as the most common gap between lines.
+
+    Line pitch is a property of the typography, not of any one question, and it
+    must be measured document-wide. A short question — two lines of passage plus
+    a one-line prompt — has exactly one gap, which is the *paragraph* gap; a
+    block-local estimate therefore mistakes it for the line pitch and never
+    splits the passage from the prompt. Measuring across the document gives the
+    real leading (~14.25pt here), against which 27pt is plainly a break.
+    """
+    counts: dict[float, int] = {}
+    for a, b in zip(lines, lines[1:]):
+        if a.page != b.page:
+            continue
+        gap = b.line.cy - a.line.cy
+        if gap <= 0:
+            continue
+        key = round(gap * 2) / 2  # half-point buckets
+        counts[key] = counts.get(key, 0) + 1
+    if not counts:
+        return 0.0
+    return max(counts.items(), key=lambda kv: (kv[1], -kv[0]))[0]
+
+
+def _paragraphs(
+    lines: list[DocLine], pitch: float = 0.0, gap_factor: float = 1.55
+) -> list[str]:
     """Join wrapped lines into paragraphs using vertical gaps.
 
     Gaps are only meaningful within a page; across a page break the text is
     treated as continuing the same paragraph, which is what these exports do.
+
+    `pitch` should come from `document_pitch`. When it is unknown, fall back to
+    the tightest gap in this block, which is right whenever the block is long
+    enough to contain at least one wrapped line.
     """
     if not lines:
         return []
-    gaps = [
-        b.line.cy - a.line.cy
-        for a, b in zip(lines, lines[1:])
-        if a.page == b.page and b.line.cy > a.line.cy
-    ]
-    pitch = statistics.median(gaps) if gaps else 0.0
+    if pitch <= 0:
+        gaps = sorted(
+            b.line.cy - a.line.cy
+            for a, b in zip(lines, lines[1:])
+            if a.page == b.page and b.line.cy > a.line.cy
+        )
+        pitch = gaps[len(gaps) // 5] if gaps else 0.0
     threshold = pitch * gap_factor if pitch > 0 else float("inf")
 
     paras: list[list[str]] = [[lines[0].text]]
@@ -195,7 +226,7 @@ def _split_blocks(lines: list[DocLine]) -> list[list[DocLine]]:
     return blocks
 
 
-def _parse_block(block: list[DocLine], source: str) -> RawQuestion:
+def _parse_block(block: list[DocLine], source: str, pitch: float = 0.0) -> RawQuestion:
     qid = QID_RE.match(block[0].text.strip()).group(1)
     q = RawQuestion(
         qid=qid,
@@ -240,7 +271,7 @@ def _parse_block(block: list[DocLine], source: str) -> RawQuestion:
     end = a_i if a_i is not None else (c_i if c_i is not None else len(block))
     qlines = block[q_i + 1 : end]
     q.question_lines = qlines
-    texts = _paragraphs(qlines)
+    texts = _paragraphs(qlines, pitch)
     if not texts:
         q.problems.append("empty Question section")
     elif len(texts) == 1:
@@ -272,7 +303,7 @@ def _parse_block(block: list[DocLine], source: str) -> RawQuestion:
         q.problems.append("no Correct Answer line")
 
     if r_i is not None:
-        q.rationale = "\n\n".join(_paragraphs(block[r_i + 1 :])) or None
+        q.rationale = "\n\n".join(_paragraphs(block[r_i + 1 :], pitch)) or None
     else:
         q.problems.append("no Rationale section")
 
@@ -295,9 +326,12 @@ def parse(pdf: Path) -> list[RawQuestion]:
         widths[page.number] = page.width
         lines.extend(DocLine(page.number, l) for l in page.lines)
 
+    pitch = document_pitch(lines)
+
     out: list[RawQuestion] = []
     for block in _split_blocks(lines):
-        q = _parse_block(block, pdf.name)
+        q = _parse_block(block, pdf.name, pitch)
         q.page_width = widths.get(q.page_start, 612.0)
+        q.pitch = pitch
         out.append(q)
     return out

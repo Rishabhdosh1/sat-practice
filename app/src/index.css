@@ -1,0 +1,22 @@
+@import 'tailwindcss';
+@import 'katex/dist/katex.min.css';
+
+:root {
+  color-scheme: light dark;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Stop iOS painting a grey flash over choices on tap. */
+.choice-btn {
+  -webkit-tap-highlight-color: transparent;
+}

@@ -71,7 +71,7 @@ def ingest(source: Path, out: Path, figures_dir: Path) -> tuple[list[Question], 
                     )
                 # The figure's own labels (rotated axis text extracts as
                 # fragments) must not be spliced into the passage.
-                texts = parse_cb._paragraphs(prose)
+                texts = parse_cb._paragraphs(prose, raw.pitch)
                 if texts:
                     raw.stem = texts[-1]
                     raw.stimulus = "\n\n".join(texts[:-1]) or None
@@ -148,7 +148,13 @@ def ingest(source: Path, out: Path, figures_dir: Path) -> tuple[list[Question], 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description="Build questions.json from the raw SAT sources.")
     ap.add_argument("--source", type=Path, default=Path.home() / "Downloads")
-    ap.add_argument("--out", type=Path, default=Path(__file__).resolve().parent.parent / "data")
+    # Output lands under the app's static dir so there is a single source of
+    # truth: re-running ingest updates the app with no copy step and no rebuild.
+    ap.add_argument(
+        "--out",
+        type=Path,
+        default=Path(__file__).resolve().parent.parent / "app" / "public" / "data",
+    )
     args = ap.parse_args(argv)
 
     root = args.out.parent
