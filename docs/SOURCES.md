@@ -1,8 +1,15 @@
 # Source survey — `~/Downloads`
 
-A full sweep of 322 entries. There is no JSON, CSV or database anywhere; every
-question source is a PDF plus one Markdown file. Sources are graded by whether
-their answers can be trusted and whether the text is machine-readable.
+A full sweep of 322 entries, re-swept 2026-09-16 including subdirectories. There
+is no JSON, CSV or database anywhere; every question source is a PDF plus one
+Markdown file. Sources are graded by whether their answers can be trusted and
+whether the text is machine-readable.
+
+Every PDF in `~/Downloads` was checked for the `Question ID:` marker that starts
+a College Board Question Bank export. Fifteen files carry it; the three listed
+below are the only ones contributing questions, and the other twelve are all
+duplicates of them. **691 is the whole bank these sources can produce** — more
+Reading and Writing practice needs a genuinely new export, not another copy.
 
 ## Ingested
 
@@ -51,6 +58,7 @@ Two caveats, both surfaced in the app rather than silently accepted:
 | `RW_MOD2_AUGUST.pdf`, `MATH_MOD2_AUGUST.pdf` | Scans whose only text layer is a repeated `@crackdsatchat` watermark. |
 | `RW_Practice_Collection_Reformatted.pdf`, `RWdsatleakspekin22_compressed.pdf`, `SAT_RW_Enhanced_Clear_compressed (1).pdf` | Three resolutions of the same 59-page scan. No text layer. |
 | `RDOSHI_SAT_PRACTICE_*.pdf`, `digital_sat_k12_*.pdf` | Score reports, not question data. |
+| `English/` (12 PDFs, surveyed 2026-09-16) | Real question-bank exports in the Tier A format that parse cleanly — but **every one of their 293 question IDs is already ingested**. The ten per-skill PDFs (`Expression of Ideas/Transitions.pdf` and friends) are exactly the 150 questions of `English 150 questions.pdf` re-filed by skill; `English question (Unanswered).pdf` is 143 of the same questions with the answer key stripped, so it is unusable for self-grading anyway. Adding them to `CB_EXPORTS` would change nothing but the dedup report. |
 
 ## Adding Math later
 

@@ -263,7 +263,24 @@ export default function App() {
               </button>
             ))}
           </nav>
-          <span className="ml-auto tabular-nums text-xs text-slate-500">{fmtClock(sessionMs)}</span>
+          {/* how much of the whole bank is behind you — the thing you actually
+              want to watch when the plan is "all of them before the test" */}
+          <button
+            onClick={() => setView('dashboard')}
+            title={`${seen.size} of ${all.length} questions answered at least once`}
+            className="ml-auto flex items-center gap-2 rounded px-1.5 py-1 text-xs text-slate-500 transition hover:bg-slate-100 dark:hover:bg-slate-800"
+          >
+            <span className="tabular-nums">
+              {seen.size} / {all.length} done
+            </span>
+            <span className="hidden h-1.5 w-16 overflow-hidden rounded-full bg-slate-200 sm:block dark:bg-slate-700">
+              <span
+                className="block h-full rounded-full bg-emerald-500"
+                style={{ width: `${all.length ? (seen.size / all.length) * 100 : 0}%` }}
+              />
+            </span>
+          </button>
+          <span className="tabular-nums text-xs text-slate-500">{fmtClock(sessionMs)}</span>
           <button
             onClick={() => setSheetOpen(true)}
             className="rounded border border-slate-300 px-2 py-1 text-xs lg:hidden dark:border-slate-600"
