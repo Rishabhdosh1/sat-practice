@@ -123,6 +123,27 @@ export function FiltersPanel({
     })
   }
 
+  /** Whether the filters are already narrowed to exactly this one domain. */
+  function isOnlyDomain(domain: string): boolean {
+    return (
+      filters.domains.length === 1 && filters.domains[0] === domain && filters.skills.length === 0
+    )
+  }
+
+  /**
+   * Drop everything else and practise a single domain — the "I'm weak at
+   * Expression of Ideas, give me only those" move. The Domain list below
+   * *adds* to the current selection, which is right for building a set but
+   * wrong when what you want is one topic and nothing else.
+   */
+  function focusDomain(domain: string) {
+    setFilters({
+      ...EMPTY_FILTERS,
+      shuffle: filters.shuffle,
+      domains: isOnlyDomain(domain) ? [] : [domain],
+    })
+  }
+
   const counts = useMemo(
     () => ({
       sections: facetCounts(all, filters, ctx, 'sections', VALUE_OF.sections),
@@ -147,6 +168,13 @@ export function FiltersPanel({
   )
 
   const byDomain = useMemo(() => skillsByDomain(all), [all])
+
+  /** Totals ignoring the active filters — a focus button clears them anyway, so
+   *  a contextual count would promise a number you aren't about to get. */
+  const domainTotals = useMemo(
+    () => facetCounts(all, EMPTY_FILTERS, ctx, 'domains', VALUE_OF.domains),
+    [all, ctx],
+  )
 
   // When domains are selected, only show their skills — otherwise every skill.
   const visibleDomains = filters.domains.length
@@ -293,6 +321,36 @@ export function FiltersPanel({
           </button>
         ))}
       </div>
+
+      {/* one tap to a single topic --------------------------------------- */}
+      <section className="border-b border-slate-200 py-2.5 dark:border-slate-800">
+        <div className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+          Practise one topic
+        </div>
+        <div className="flex flex-wrap gap-1.5">
+          {universe.domains.map((d) => {
+            const on = isOnlyDomain(d)
+            return (
+              <button
+                key={d}
+                type="button"
+                onClick={() => focusDomain(d)}
+                title={on ? 'Back to everything' : `Only ${d} — clears other filters`}
+                className={`flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs transition ${
+                  on
+                    ? 'border-sky-600 bg-sky-600 text-white'
+                    : 'border-slate-300 text-slate-700 hover:border-slate-500 dark:border-slate-600 dark:text-slate-300'
+                }`}
+              >
+                {d}
+                <span className={on ? 'opacity-70' : 'text-slate-400'}>
+                  {domainTotals.get(d) ?? 0}
+                </span>
+              </button>
+            )
+          })}
+        </div>
+      </section>
 
       <Section
         title="Section"

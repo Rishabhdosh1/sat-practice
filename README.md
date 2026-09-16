@@ -91,6 +91,13 @@ floating over it, so it never covers the last choice.
 - **Save these N** names the current selection as a set you can filter back to
   later ("August 2026 additions").
 
+**Practise one topic** sits at the top of the panel: one tap drops every other
+filter and leaves you with a single domain — Expression of Ideas (33), Craft and
+Structure (185), Information and Ideas (56) or Standard English Conventions
+(417). Tap it again to go back to everything. The Domain list further down *adds*
+to what's already selected, which is what you want when assembling a set and not
+what you want when you're drilling one weak area.
+
 **Dashboard** shows per-skill, per-domain and per-difficulty accuracy, weakest
 first, counting only your most recent attempt per question so re-drilling
 something you now know doesn't inflate the number.
