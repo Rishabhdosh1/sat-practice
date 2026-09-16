@@ -5,9 +5,11 @@ import { FiltersPanel } from './components/FiltersPanel'
 import { QuestionView } from './components/QuestionView'
 import { applyFilters, countActive, type FilterContext } from './lib/filter'
 import {
+  CURSOR_STORAGE_KEY,
   exportHistory,
   FILTERS_STORAGE_KEY,
   parseHistory,
+  SEED_STORAGE_KEY,
   seenQuestionIds,
   statsBy,
   useAttempts,
@@ -48,9 +50,10 @@ export default function App() {
   const [sheetOpen, setSheetOpen] = useState(false)
   const [showCalc, setShowCalc] = useState(false)
   const [cursor, setCursor] = useState(0)
-  const [seed, setSeed] = useState(1)
 
+  const [seed, setSeed] = usePersisted<number>(SEED_STORAGE_KEY, 1)
   const [filters, setFilters] = usePersisted<Filters>(FILTERS_STORAGE_KEY, EMPTY_FILTERS)
+  const [lastQuestionId, setLastQuestionId] = usePersisted<string | null>(CURSOR_STORAGE_KEY, null)
   const { attempts, record, merge, clear } = useAttempts()
   const { sets, save: saveSet, remove: removeSet } = useNamedSets()
 
@@ -96,7 +99,30 @@ export default function App() {
     setCursor((c) => (matched.length ? Math.min(c, matched.length - 1) : 0))
   }, [matched.length])
 
+  /** The question we are trying to land on after a relaunch. Read once, on the
+   *  first render, and cleared as soon as we arrive — or as soon as it is clear
+   *  the saved question is not in the current filter set. */
+  const resumeTo = useRef<string | null>(lastQuestionId)
+
+  useEffect(() => {
+    if (!resumeTo.current || !matched.length) return
+    const i = matched.findIndex((q) => q.id === resumeTo.current)
+    if (i >= 0) setCursor(i)
+    else resumeTo.current = null
+  }, [matched])
+
   const current: Question | undefined = matched[cursor]
+
+  useEffect(() => {
+    if (!current) return
+    if (resumeTo.current) {
+      // Still in transit: this render is the pre-jump question 1, so saving it
+      // now would overwrite the very id we are on our way to.
+      if (current.id === resumeTo.current) resumeTo.current = null
+      return
+    }
+    setLastQuestionId(current.id)
+  }, [current, setLastQuestionId])
 
   const onSubmit = useCallback(
     (answer: string, correct: boolean, ms: number) => {

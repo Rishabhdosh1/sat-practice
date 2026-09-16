@@ -4,6 +4,8 @@ import type { Attempt, NamedSet } from './types'
 const ATTEMPTS_KEY = 'sat.attempts.v1'
 const SETS_KEY = 'sat.sets.v1'
 const FILTERS_KEY = 'sat.filters.v1'
+const CURSOR_KEY = 'sat.cursor.v1'
+const SEED_KEY = 'sat.seed.v1'
 
 /** localStorage can throw outright (private mode, blocked site data), so every
  *  read and write is guarded and falls back to in-memory state. */
@@ -81,6 +83,11 @@ export function useNamedSets() {
 }
 
 export const FILTERS_STORAGE_KEY = FILTERS_KEY
+/** Id of the question last on screen, so a relaunch resumes where you left off. */
+export const CURSOR_STORAGE_KEY = CURSOR_KEY
+/** Shuffle seed, persisted so a shuffled run keeps its order across launches —
+ *  otherwise the saved question would sit at a different index every time. */
+export const SEED_STORAGE_KEY = SEED_KEY
 
 // ------------------------------------------------------------------ derived
 

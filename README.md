@@ -95,9 +95,15 @@ floating over it, so it never covers the last choice.
 first, counting only your most recent attempt per question so re-drilling
 something you now know doesn't inflate the number.
 
-**History** lives in `localStorage` and can be exported and re-imported as JSON
-from the Filters panel. Import merges rather than overwrites, de-duplicating on
-question id plus timestamp.
+**History** — every attempt, your filters, the shuffle order and the question
+you were last on — lives in `localStorage` and is restored on the next launch,
+so closing the app picks up where you left off rather than back at 1 / 691. The
+resume is stored as a question *id*, not an index: if the filters no longer
+match that question the app falls back to the start of the set rather than
+landing on an unrelated question that happens to sit at the same number.
+
+History can be exported and re-imported as JSON from the Filters panel. Import
+merges rather than overwrites, de-duplicating on question id plus timestamp.
 
 ## Layout
 

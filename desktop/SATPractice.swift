@@ -97,6 +97,9 @@ final class BundleSchemeHandler: NSObject, WKURLSchemeHandler {
 final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, WKDownloadDelegate {
     var window: NSWindow!
     var webView: WKWebView!
+    let selftest = CommandLine.arguments.contains("--selftest")
+    private var selftestLoads = 0
+    private var selftestResumeId: String?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         let root = Bundle.main.resourceURL!.appendingPathComponent("web")
@@ -106,7 +109,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, 
         // A persistent store keeps localStorage — the attempt history — across
         // launches. The default store is already persistent; being explicit
         // documents that history depends on it.
-        config.websiteDataStore = .default()
+        //
+        // The selftest gets a throwaway store instead: it writes a saved
+        // position of its own, and a build must never reach into the history of
+        // whoever happens to be running it.
+        config.websiteDataStore = selftest ? .nonPersistent() : .default()
 
         webView = WKWebView(frame: .zero, configuration: config)
         webView.navigationDelegate = self
@@ -144,11 +151,19 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, 
         true
     }
 
-    /// `SATPractice --selftest` boots the bundled page, checks that the app
-    /// mounted and the dataset loaded, prints the result and exits. Used by
-    /// build.sh to catch a broken bundle without needing a human to look.
+    /// `SATPractice --selftest` boots the bundled page and checks that the app
+    /// mounted and the dataset loaded; it then saves a position and reloads, so
+    /// the second load stands in for a relaunch and proves the app resumes
+    /// there. Used by build.sh to catch a broken bundle without needing a human
+    /// to look.
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        guard CommandLine.arguments.contains("--selftest") else { return }
+        guard selftest else { return }
+        selftestLoads += 1
+        guard selftestLoads == 1 else {
+            // Give React a beat to mount, then check where it landed.
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) { self.checkResume(webView) }
+            return
+        }
         // callAsyncJavaScript wraps this in an async function itself, so the
         // body returns directly rather than being an IIFE.
         let probe = """
@@ -173,7 +188,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, 
                         || self.window.firstResponder is NSView
                     print("SELFTEST \(value)")
                     print("SELFTEST window fullScreenPrimary=\(fs) resizable=\(self.window.styleMask.contains(.resizable)) focusedView=\(focused)")
-                    exit(0)
+                    self.saveAPositionAndReload(webView)
                 case .failure(let error):
                     print("SELFTEST FAILED \(error)")
                     exit(1)
@@ -182,8 +197,56 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, 
         }
     }
 
+    /// Save a position the way the page does, then reload.
+    private func saveAPositionAndReload(_ webView: WKWebView) {
+        // The 7th question, so a successful resume reads "7 / 691" and cannot be
+        // mistaken for the "1 / 691" that not resuming at all would show.
+        let seed = """
+        const r = await fetch('/data/questions.json');
+        const id = (await r.json()).questions[6].id;
+        localStorage.setItem('sat.cursor.v1', JSON.stringify(id));
+        return id;
+        """
+        webView.callAsyncJavaScript(seed, in: nil, in: .page) { result in
+            guard case .success(let value) = result, let id = value as? String else {
+                print("SELFTEST FAILED could not save a position: \(result)")
+                exit(1)
+            }
+            self.selftestResumeId = id
+            webView.reload()
+        }
+    }
+
+    /// Second load: the saved question should be on screen, not question 1.
+    private func checkResume(_ webView: WKWebView) {
+        let probe = """
+        const text = document.querySelector('article')?.innerText ?? '';
+        const m = text.match(/(\\d+)\\s*\\/\\s*(\\d+)/);
+        return JSON.stringify({
+          at: m ? Number(m[1]) : null,
+          of: m ? Number(m[2]) : null,
+          saved: JSON.parse(localStorage.getItem('sat.cursor.v1') ?? 'null')
+        });
+        """
+        webView.callAsyncJavaScript(probe, in: nil, in: .page) { result in
+            guard case .success(let value) = result,
+                  let json = (value as? String)?.data(using: .utf8),
+                  let got = (try? JSONSerialization.jsonObject(with: json)) as? [String: Any] else {
+                print("SELFTEST FAILED resume probe: \(result)")
+                exit(1)
+            }
+            let at = got["at"] as? Int
+            guard at == 7, got["saved"] as? String == self.selftestResumeId else {
+                print("SELFTEST FAILED resumed at \(at ?? -1), expected 7 — \(got)")
+                exit(1)
+            }
+            print("SELFTEST resumed at \(at!) / \(got["of"] ?? "?") after reload")
+            exit(0)
+        }
+    }
+
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        if CommandLine.arguments.contains("--selftest") {
+        if selftest {
             print("SELFTEST NAVIGATION FAILED \(error)")
             exit(1)
         }
