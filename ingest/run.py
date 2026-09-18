@@ -32,6 +32,7 @@ from .normalize import SCHEMA_VERSION, Question, from_cb, from_latin, sha256, va
 CB_EXPORTS = [
     "questionbank-export-2026-7-13.pdf",
     "questionbank-export-2026-9-8.pdf",
+    "questionbank-export-2026-9-18.pdf",
     "English 150 questions.pdf",
 ]
 LATIN_MD = "latin-roots-sat-question-bank.md"

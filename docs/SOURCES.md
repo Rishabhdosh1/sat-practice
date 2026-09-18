@@ -1,14 +1,14 @@
 # Source survey — `~/Downloads`
 
-A full sweep of 322 entries, re-swept 2026-09-16 including subdirectories. There
-is no JSON, CSV or database anywhere; every question source is a PDF plus one
-Markdown file. Sources are graded by whether their answers can be trusted and
-whether the text is machine-readable.
+A full sweep of 322 entries, re-swept 2026-09-16 including subdirectories, plus
+the 2026-09-18 export. There is no JSON, CSV or database anywhere; every question
+source is a PDF plus one Markdown file. Sources are graded by whether their
+answers can be trusted and whether the text is machine-readable.
 
 Every PDF in `~/Downloads` was checked for the `Question ID:` marker that starts
-a College Board Question Bank export. Fifteen files carry it; the three listed
+a College Board Question Bank export. Sixteen files carry it; the four listed
 below are the only ones contributing questions, and the other twelve are all
-duplicates of them. **691 is the whole bank these sources can produce** — more
+duplicates of them. **701 is the whole bank these sources can produce** — more
 Reading and Writing practice needs a genuinely new export, not another copy.
 
 ## Ingested
@@ -18,17 +18,23 @@ Reading and Writing practice needs a genuinely new export, not another copy.
 | `questionbank-export-2026-7-13.pdf` | 379 | A | official |
 | `English 150 questions.pdf` | 150 | A | official |
 | `questionbank-export-2026-9-8.pdf` | 10 | A | official |
+| `questionbank-export-2026-9-18.pdf` | 10 | A | official |
 | `latin-roots-sat-question-bank.md` | 153 | B | unverified_answer |
-| **Total after dedup** | **691** | | |
+| **Total after dedup** | **701** | | |
 
 ### Tier A — College Board Question Bank exports
 
-Three files share one export format, despite the misleading name on the middle
-one. Each question carries a stable 8-hex-character College Board question ID,
+Four files share one export format, despite the misleading name on the second.
+Each question carries a stable 8-hex-character College Board question ID,
 Assessment / Test / Domain / Skill / Difficulty, stem, four labelled choices,
 `Correct Answer:` and a full rationale explaining every distractor.
 
-All 539 are Reading and Writing. **There is no Math in any of them.**
+All 549 are Reading and Writing. **There is no Math in any of them.**
+
+The 2026-09-18 export is 10 questions, all Expression of Ideas — 5 Transitions
+and 5 Rhetorical Synthesis — and none of its 10 IDs overlap anything already
+ingested, so all 10 are new. It parses with no code changes; adding the filename
+to `CB_EXPORTS` was the whole of it.
 
 `cb:2903668a` appears in both the 9-8 export and English 150. The two copies are
 byte-identical; one is kept and the duplication is recorded in the report.
@@ -89,7 +95,7 @@ in `ingest/extract.py` and `ingest/parse_cb.py`:
 2. **Wrapped table cells.** Domain and Skill wrap inside their column
    ("Standard English" / "Conventions"), so a flat read yields
    `Standard English Boundaries Easy Conventions`. Words are assigned to columns
-   by x-position against the header row instead. Without this, 417 of 538
+   by x-position against the header row instead. Without this, 417 of 548
    questions lose their domain.
 
 3. **Vector figures.** Charts and tables are vector graphics, not embedded
@@ -101,7 +107,7 @@ in `ingest/extract.py` and `ingest/parse_cb.py`:
 
 ### Known residue
 
-Three places across 691 questions where an apostrophe still sits apart, all
+Three places across 701 questions where an apostrophe still sits apart, all
 archaic or proper-noun forms the contraction rule intentionally does not cover:
 `But’ tis` and `them’ tis` (Shakespeare, where the apostrophe belongs to the
 *following* word) and `Yup’ ik`. Left as-is rather than special-cased.

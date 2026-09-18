@@ -6,41 +6,42 @@
     "inputs": {
       "questionbank-export-2026-7-13.pdf": "9da99f7afecb124e134d781c22d5c8f84a1fd416a33e57bb8661339db3145197",
       "questionbank-export-2026-9-8.pdf": "a8950546d22caececfdaa29e0e2e84ba7c10353da45fe922c06972bbb9cbf553",
+      "questionbank-export-2026-9-18.pdf": "b3be67f6fb5f3cb672af3a53836feb61ef14682844ecdc0b42bc015310cfbc48",
       "English 150 questions.pdf": "24f74517175c5311f9d50a1e32f7f96eb014c71d2268ac8cc480d3b168815b70",
       "latin-roots-sat-question-bank.md": "624f0d6c1e58fde0b6b15117fc1fe32bb538643b6b72a72eff432594243e6c9b"
     }
   },
   "counts": {
-    "total": 691,
+    "total": 701,
     "by_section": {
-      "reading_writing": 691
+      "reading_writing": 701
     },
     "by_domain": {
       "Standard English Conventions": 417,
       "Craft and Structure": 185,
       "Information and Ideas": 56,
-      "Expression of Ideas": 33
+      "Expression of Ideas": 43
     },
     "by_skill": {
       "Boundaries": 210,
       "Form, Structure, and Sense": 207,
       "Words in Context": 171,
-      "Transitions": 21,
+      "Transitions": 26,
       "Command of Evidence": 19,
       "Inferences": 19,
       "Central Ideas and Details": 18,
-      "Rhetorical Synthesis": 12,
+      "Rhetorical Synthesis": 17,
       "Text Structure and Purpose": 11,
       "Cross-Text Connections": 3
     },
     "by_difficulty": {
-      "hard": 220,
-      "easy": 177,
+      "hard": 224,
+      "easy": 181,
       "(none)": 153,
-      "medium": 141
+      "medium": 143
     },
     "by_trust": {
-      "official": 538,
+      "official": 548,
       "unverified_answer": 153
     },
     "with_figures": 7
@@ -672,6 +673,69 @@
       "figures": [],
       "tags": [
         "english-150-questions"
+      ],
+      "flags": [],
+      "needs_review": false
+    },
+    {
+      "id": "cb:064c8999",
+      "source_ids": [
+        "cb:064c8999"
+      ],
+      "source": {
+        "file": "questionbank-export-2026-9-18.pdf",
+        "page": 9,
+        "tier": "A",
+        "trust": "official"
+      },
+      "section": "reading_writing",
+      "domain": "Expression of Ideas",
+      "skill": "Rhetorical Synthesis",
+      "difficulty": "easy",
+      "stimulus": {
+        "text": "While researching a topic, a student has taken the following notes:\n\nThe Haber-Bosch process is an industrial process used to manufacture ammonia (NH 3). It was invented by chemists Fritz Haber and Carl Bosch in 1910. The process’s primary reaction combines nitrogen (N 2) from the air with hydrogen (H 2). It requires an iron catalyst and high temperatures and pressures. Most of the ammonia produced by this process is used in fertilizers.",
+        "format": "text"
+      },
+      "stem": {
+        "text": "The student wants to provide an overview of the Haber-Bosch process. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+        "format": "text"
+      },
+      "response_type": "mcq",
+      "choices": [
+        {
+          "label": "A",
+          "text": "The Haber-Bosch process needs nitrogen, hydrogen, and an iron catalyst.",
+          "format": "text"
+        },
+        {
+          "label": "B",
+          "text": "The Haber-Bosch process uses an iron catalyst along with high temperatures and pressures to manufacture ammonia from nitrogen and hydrogen.",
+          "format": "text"
+        },
+        {
+          "label": "C",
+          "text": "Chemists Fritz Haber and Carl Bosch invented an industrial process to manufacture ammonia to be used in fertilizers.",
+          "format": "text"
+        },
+        {
+          "label": "D",
+          "text": "In 1910, chemists Fritz Haber and Carl Bosch invented the Haber-Bosch process, which requires high temperatures and pressures.",
+          "format": "text"
+        }
+      ],
+      "correct": {
+        "labels": [
+          "B"
+        ],
+        "values": []
+      },
+      "explanation": {
+        "text": "Choice B is the best answer. The sentence provides an overview of the Haber-Bosch process, explaining that it uses an iron catalyst, high temperatures, and high pressures to manufacture ammonia from nitrogen and hydrogen.\n\nChoice A is incorrect. While the sentence identifies some of the process’s required components (nitrogen, hydrogen, and an iron catalyst), the overview is incomplete; it doesn’t explain what the process does (produces ammonia) or mention the conditions needed for it to function (high temperatures and pressures). Choice C is incorrect. While the sentence indicates who invented the process (Fritz Haber and Carl Bosch) and that it produces ammonia, the overview is incomplete; it doesn’t mention any of the necessary ingredients or conditions. Choice D is incorrect. While the sentence mentions the inventors of the process along with the required conditions (high temperatures and pressures), it doesn’t explain that the process produces ammonia or indicate what components are needed.",
+        "format": "text"
+      },
+      "figures": [],
+      "tags": [
+        "export-2026-09-18"
       ],
       "flags": [],
       "needs_review": false
@@ -4845,6 +4909,69 @@
       "needs_review": false
     },
     {
+      "id": "cb:2b08f514",
+      "source_ids": [
+        "cb:2b08f514"
+      ],
+      "source": {
+        "file": "questionbank-export-2026-9-18.pdf",
+        "page": 1,
+        "tier": "A",
+        "trust": "official"
+      },
+      "section": "reading_writing",
+      "domain": "Expression of Ideas",
+      "skill": "Transitions",
+      "difficulty": "hard",
+      "stimulus": {
+        "text": "The prime meridian, the global indicator of zero degrees longitude established in 1884, was originally determined using astronomically derived coordinates. ______ as decades passed, new calculations would reveal increasingly precise coordinates, yet the prime meridian remained unchanged; it wasn’t until the 1980s that, spurred by improved geodetic data, the prime meridian was officially moved — roughly one hundred meters east.",
+        "format": "text"
+      },
+      "stem": {
+        "text": "Which choice completes the text with the most logical transition?",
+        "format": "text"
+      },
+      "response_type": "mcq",
+      "choices": [
+        {
+          "label": "A",
+          "text": "Specifically,",
+          "format": "text"
+        },
+        {
+          "label": "B",
+          "text": "To that end,",
+          "format": "text"
+        },
+        {
+          "label": "C",
+          "text": "Again and again,",
+          "format": "text"
+        },
+        {
+          "label": "D",
+          "text": "Granted,",
+          "format": "text"
+        }
+      ],
+      "correct": {
+        "labels": [
+          "C"
+        ],
+        "values": []
+      },
+      "explanation": {
+        "text": "Choice C is the best answer. \"Again and again\" logically signals that the information in this sentence — that new calculations revealed increasingly precise coordinates for the location of the prime meridian — refers to events that occurred multiple times in the decades after the establishment of the prime meridian in 1884 (which is described in the preceding sentence).\n\nChoice A is incorrect because \"specifically\" illogically signals that the information in this sentence provides specific, precise details elaborating on the description of the prime meridian’s establishment in the previous sentence. Instead, the sentence indicates that increasingly precise coordinates were revealed on multiple occasions in the decades following the meridian’s establishment. Choice B is incorrect because \"to that end\" illogically signals that the information in this sentence is a means of accomplishing a goal established in the previous sentence about the prime meridian’s establishment. Instead, the sentence indicates that increasingly precise coordinates were revealed on multiple occasions in the decades following the meridian’s establishment. Choice D is incorrect because \"granted\" illogically signals that the information in this sentence is in opposition to the information about the prime meridian’s establishment in the previous sentence. Instead, the sentence indicates that increasingly precise coordinates were revealed on multiple occasions in the decades following the meridian’s establishment.",
+        "format": "text"
+      },
+      "figures": [],
+      "tags": [
+        "export-2026-09-18"
+      ],
+      "flags": [],
+      "needs_review": false
+    },
+    {
       "id": "cb:2b252bbd",
       "source_ids": [
         "cb:2b252bbd"
@@ -6730,6 +6857,69 @@
       "figures": [],
       "tags": [
         "export-2026-07-13"
+      ],
+      "flags": [],
+      "needs_review": false
+    },
+    {
+      "id": "cb:39ccb463",
+      "source_ids": [
+        "cb:39ccb463"
+      ],
+      "source": {
+        "file": "questionbank-export-2026-9-18.pdf",
+        "page": 7,
+        "tier": "A",
+        "trust": "official"
+      },
+      "section": "reading_writing",
+      "domain": "Expression of Ideas",
+      "skill": "Rhetorical Synthesis",
+      "difficulty": "hard",
+      "stimulus": {
+        "text": "While researching a topic, a student has taken the following notes:\n\nThe Atlantic Monthly magazine was first published in 1857. The magazine focused on politics, art, and literature. In 2019, historian Cathryn Halverson published the book Faraway Women and the “Atlantic Monthly.” Its subject is female authors whose autobiographies appeared in the magazine in the early 1900s. One of the authors discussed is Juanita Harrison.",
+        "format": "text"
+      },
+      "stem": {
+        "text": "The student wants to introduce Cathryn Halverson’s book to an audience already familiar with the Atlantic Monthly. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+        "format": "text"
+      },
+      "response_type": "mcq",
+      "choices": [
+        {
+          "label": "A",
+          "text": "Cathryn Halverson’s Faraway Women and the “Atlantic Monthly” discusses female authors whose autobiographies appeared in the magazine in the early 1900s.",
+          "format": "text"
+        },
+        {
+          "label": "B",
+          "text": "A magazine called the Atlantic Monthly, referred to in Cathryn Halverson’s book title, was first published in 1857.",
+          "format": "text"
+        },
+        {
+          "label": "C",
+          "text": "Faraway Women and the “Atlantic Monthly” features contributors to the Atlantic Monthly, first published in 1857 as a magazine focusing on politics, art, and literature.",
+          "format": "text"
+        },
+        {
+          "label": "D",
+          "text": "An author discussed by Cathryn Halverson is Juanita Harrison, whose autobiography appeared in the Atlantic Monthly in the early 1900s.",
+          "format": "text"
+        }
+      ],
+      "correct": {
+        "labels": [
+          "A"
+        ],
+        "values": []
+      },
+      "explanation": {
+        "text": "Choice A is the best answer. The sentence effectively introduces Cathryn Halverson’s book to an audience already familiar with the Atlantic Monthly, noting the title of Halverson’s book and describing its content without providing background information about the Atlantic Monthly.\n\nChoice B is incorrect. The sentence introduces the Atlantic Monthly and mentions that it’s referred to in Cathryn Halverson’s book title; it doesn’t effectively introduce Halverson’s book. Choice C is incorrect. The sentence assumes that the audience is unfamiliar with the Atlantic Monthly, providing background information about the magazine; it doesn’t effectively introduce Halverson’s book to an audience already familiar with the Atlantic Monthly. Choice D is incorrect. While the sentence assumes that the audience is familiar with the Atlantic Monthly, it doesn’t effectively introduce Cathryn Halverson’s book.",
+        "format": "text"
+      },
+      "figures": [],
+      "tags": [
+        "export-2026-09-18"
       ],
       "flags": [],
       "needs_review": false
@@ -9079,6 +9269,69 @@
       "figures": [],
       "tags": [
         "english-150-questions"
+      ],
+      "flags": [],
+      "needs_review": false
+    },
+    {
+      "id": "cb:4d2736f0",
+      "source_ids": [
+        "cb:4d2736f0"
+      ],
+      "source": {
+        "file": "questionbank-export-2026-9-18.pdf",
+        "page": 5,
+        "tier": "A",
+        "trust": "official"
+      },
+      "section": "reading_writing",
+      "domain": "Expression of Ideas",
+      "skill": "Transitions",
+      "difficulty": "hard",
+      "stimulus": {
+        "text": "In her poetry collection Thomas and Beulah, Rita Dove interweaves the titular characters’ personal stories with broader historical narratives. She places Thomas’s journey from the American South to the Midwest in the early 1900s within the larger context of the Great Migration. ______ Dove sets events from Beulah’s personal life against the backdrop of the US Civil Rights Movement.",
+        "format": "text"
+      },
+      "stem": {
+        "text": "Which choice completes the text with the most logical transition?",
+        "format": "text"
+      },
+      "response_type": "mcq",
+      "choices": [
+        {
+          "label": "A",
+          "text": "Specifically,",
+          "format": "text"
+        },
+        {
+          "label": "B",
+          "text": "Thus,",
+          "format": "text"
+        },
+        {
+          "label": "C",
+          "text": "Regardless,",
+          "format": "text"
+        },
+        {
+          "label": "D",
+          "text": "Similarly,",
+          "format": "text"
+        }
+      ],
+      "correct": {
+        "labels": [
+          "D"
+        ],
+        "values": []
+      },
+      "explanation": {
+        "text": "Choice D is the best answer. “Similarly” logically signals that the information in the sentence — that Dove situates Beulah’s life in the context of the US Civil Rights Movement — is similar to the previous information about Thomas and the Great Migration. Both sentences support the first sentence’s claim that Dove portrays her characters in the context of broader historical narratives.\n\nChoice A is incorrect because “specifically” illogically signals that the information about Beulah in this sentence provides specific details elaborating on the previous information about Thomas. Instead, it’s similar to the previous information about Thomas. Choice B is incorrect because “thus” illogically signals that the information about Beulah in this sentence is a result or consequence of the previous information about Thomas. Instead, it’s similar to the previous information about Thomas. Choice C is incorrect because “regardless” illogically signals that the information about Beulah in this sentence is true despite the previous information about Thomas. Instead, it’s similar to the previous information about Thomas.",
+        "format": "text"
+      },
+      "figures": [],
+      "tags": [
+        "export-2026-09-18"
       ],
       "flags": [],
       "needs_review": false
@@ -12616,6 +12869,69 @@
       "figures": [],
       "tags": [
         "english-150-questions"
+      ],
+      "flags": [],
+      "needs_review": false
+    },
+    {
+      "id": "cb:660d50dc",
+      "source_ids": [
+        "cb:660d50dc"
+      ],
+      "source": {
+        "file": "questionbank-export-2026-9-18.pdf",
+        "page": 4,
+        "tier": "A",
+        "trust": "official"
+      },
+      "section": "reading_writing",
+      "domain": "Expression of Ideas",
+      "skill": "Transitions",
+      "difficulty": "easy",
+      "stimulus": {
+        "text": "Samuel Coleridge-Taylor was a prominent classical music composer from England who toured the US three times in the early 1900s. The child of a West African father and an English mother, Coleridge-Taylor emphasized his mixed-race ancestry. For example, he referred to himself as Anglo- African. ______ he incorporated the sounds of traditional African music into his classical music compositions.",
+        "format": "text"
+      },
+      "stem": {
+        "text": "Which choice completes the text with the most logical transition?",
+        "format": "text"
+      },
+      "response_type": "mcq",
+      "choices": [
+        {
+          "label": "A",
+          "text": "In addition,",
+          "format": "text"
+        },
+        {
+          "label": "B",
+          "text": "Actually,",
+          "format": "text"
+        },
+        {
+          "label": "C",
+          "text": "However,",
+          "format": "text"
+        },
+        {
+          "label": "D",
+          "text": "Regardless,",
+          "format": "text"
+        }
+      ],
+      "correct": {
+        "labels": [
+          "A"
+        ],
+        "values": []
+      },
+      "explanation": {
+        "text": "Choice A is the best answer. “In addition” logically signals that the detail in this sentence — that Coleridge-Taylor included traditional African music in his classical compositions — adds to the information in the previous sentence. Specifically, the previous sentence indicates one way in which Coleridge-Taylor emphasized his mixed-race ancestry, and the claim that follows indicates a second, additional way.\n\nChoice B is incorrect because “actually” illogically signals that the detail in this sentence is surprising in light of the information in the previous sentence. Instead, the detail adds to the information, indicating a second, additional way in which Coleridge-Taylor emphasized his mixed-race ancestry. Choice C is incorrect because “however” illogically signals that the detail in this sentence contrasts with the information in the previous sentence. Instead, the detail adds to the information, indicating a second, additional way in which Coleridge-Taylor emphasized his mixed-race ancestry. Choice D is incorrect because “regardless” illogically signals that the detail in this sentence is true despite the information in the previous sentence. Instead, the detail adds to the information, indicating a second, additional way in which Coleridge-Taylor emphasized his mixed-race ancestry.",
+        "format": "text"
+      },
+      "figures": [],
+      "tags": [
+        "export-2026-09-18"
       ],
       "flags": [],
       "needs_review": false
@@ -23718,6 +24034,132 @@
       "needs_review": false
     },
     {
+      "id": "cb:af76771f",
+      "source_ids": [
+        "cb:af76771f"
+      ],
+      "source": {
+        "file": "questionbank-export-2026-9-18.pdf",
+        "page": 8,
+        "tier": "A",
+        "trust": "official"
+      },
+      "section": "reading_writing",
+      "domain": "Expression of Ideas",
+      "skill": "Rhetorical Synthesis",
+      "difficulty": "easy",
+      "stimulus": {
+        "text": "While researching a topic, a student has taken the following notes:\n\nSue is the nickname of a dinosaur fossil specimen housed at the Field Museum of Natural History. The Field Museum of Natural History is located in Chicago, Illinois. Sue is a member of the genus Tyrannosaurus. Big Mike is the nickname of a dinosaur fossil specimen housed at the Museum of the Rockies. The Museum of the Rockies is located in Bozeman, Montana. Big Mike is a member of the genus Tyrannosaurus.",
+        "format": "text"
+      },
+      "stem": {
+        "text": "The student wants to emphasize a similarity between the two specimens. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+        "format": "text"
+      },
+      "response_type": "mcq",
+      "choices": [
+        {
+          "label": "A",
+          "text": "The Field Museum of Natural History, where Sue is housed, is located in Chicago, Illinois.",
+          "format": "text"
+        },
+        {
+          "label": "B",
+          "text": "Big Mike is the nickname of a Tyrannosaurus fossil specimen housed at the Museum of the Rockies in Bozeman, Montana.",
+          "format": "text"
+        },
+        {
+          "label": "C",
+          "text": "The dinosaur fossil specimens Sue and Big Mike are both members of the genus Tyrannosaurus.",
+          "format": "text"
+        },
+        {
+          "label": "D",
+          "text": "While Sue is housed at the Field Museum of Natural History, Big Mike is housed at the Museum of the Rockies.",
+          "format": "text"
+        }
+      ],
+      "correct": {
+        "labels": [
+          "C"
+        ],
+        "values": []
+      },
+      "explanation": {
+        "text": "Choice C is the best answer. The sentence emphasizes a similarity between the two specimens, noting that Sue and Big Mike are members of the same genus: Tyrannosaurus.\n\nChoice A is incorrect. The sentence only provides information about where one of the specimens (Sue) can be found; it doesn’t emphasize a similarity between the two specimens. Choice B is incorrect. The sentence only provides information about one specimen (Big Mike); it doesn’t emphasize a similarity between the two specimens. Choice D is incorrect. The sentence contrasts the locations of Sue and Big Mike; it doesn’t emphasize a similarity between the two specimens.",
+        "format": "text"
+      },
+      "figures": [],
+      "tags": [
+        "export-2026-09-18"
+      ],
+      "flags": [],
+      "needs_review": false
+    },
+    {
+      "id": "cb:afec1a70",
+      "source_ids": [
+        "cb:afec1a70"
+      ],
+      "source": {
+        "file": "questionbank-export-2026-9-18.pdf",
+        "page": 2,
+        "tier": "A",
+        "trust": "official"
+      },
+      "section": "reading_writing",
+      "domain": "Expression of Ideas",
+      "skill": "Rhetorical Synthesis",
+      "difficulty": "medium",
+      "stimulus": {
+        "text": "While researching a topic, a student has taken the following notes:\n\nAs engineered structures, many bird nests are uniquely flexible yet cohesive. A research team led by Yashraj Bhosale wanted to better understand the mechanics behind these structural properties. Bhosale’s team used laboratory models that simulated the arrangement of flexible sticks into nest-like structures. The researchers analyzed the points where sticks touched one another. When pressure was applied to the model nests, the number of contact points between the sticks increased, making the structures stiffer.",
+        "format": "text"
+      },
+      "stem": {
+        "text": "The student wants to present the primary aim of the research study. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+        "format": "text"
+      },
+      "response_type": "mcq",
+      "choices": [
+        {
+          "label": "A",
+          "text": "Bhosale’s team wanted to better understand the mechanics behind bird nests’ uniquely flexible yet cohesive structural properties.",
+          "format": "text"
+        },
+        {
+          "label": "B",
+          "text": "The researchers used laboratory models that simulated the arrangement of flexible sticks and analyzed the points where sticks touched one another.",
+          "format": "text"
+        },
+        {
+          "label": "C",
+          "text": "After analyzing the points where sticks touched, the researchers found that the structures became stiffer when pressure was applied.",
+          "format": "text"
+        },
+        {
+          "label": "D",
+          "text": "As analyzed by Bhosale’s team, bird nests are uniquely flexible yet cohesive engineered structures.",
+          "format": "text"
+        }
+      ],
+      "correct": {
+        "labels": [
+          "A"
+        ],
+        "values": []
+      },
+      "explanation": {
+        "text": "Choice A is the best answer. It describes the reason Bhosale’s team wanted to study the structures of bird nests — that is to say, the study’s primary aim.\n\nChoice B is incorrect. This choice doesn’t present the primary aim of the research study. It describes how the study worked, but not why it was done. Choice C is incorrect. This choice doesn’t present the primary aim of the research study. It describes a result of the experiment, but not why it was carried out. Choice D is incorrect. This choice doesn’t present the primary aim of the research study.",
+        "format": "text"
+      },
+      "figures": [],
+      "tags": [
+        "export-2026-09-18"
+      ],
+      "flags": [],
+      "needs_review": false
+    },
+    {
       "id": "cb:b0115ef6",
       "source_ids": [
         "cb:b0115ef6"
@@ -24469,6 +24911,69 @@
       "figures": [],
       "tags": [
         "english-150-questions"
+      ],
+      "flags": [],
+      "needs_review": false
+    },
+    {
+      "id": "cb:b46e0c8a",
+      "source_ids": [
+        "cb:b46e0c8a"
+      ],
+      "source": {
+        "file": "questionbank-export-2026-9-18.pdf",
+        "page": 10,
+        "tier": "A",
+        "trust": "official"
+      },
+      "section": "reading_writing",
+      "domain": "Expression of Ideas",
+      "skill": "Rhetorical Synthesis",
+      "difficulty": "medium",
+      "stimulus": {
+        "text": "While researching a topic, a student has taken the following notes:\n\nOrganisms release cellular material into their environment by shedding substances such as hair or skin. The DNA in these substances is known as environmental DNA, or eDNA. Researchers collect and analyze eDNA to detect the presence of species that are difficult to observe. Geneticist Sara Oyler-McCance’s research team analyzed eDNA in water samples from the Florida Everglades to detect invasive constrictor snake species in the area. The study determined a 91% probability of detecting Burmese python eDNA in a given location.",
+        "format": "text"
+      },
+      "stem": {
+        "text": "The student wants to present the study to an audience already familiar with environmental DNA. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+        "format": "text"
+      },
+      "response_type": "mcq",
+      "choices": [
+        {
+          "label": "A",
+          "text": "Sara Oyler-McCance’s researchers analyzed eDNA in water samples from the Florida Everglades for evidence of invasive constrictor snakes, which are difficult to observe.",
+          "format": "text"
+        },
+        {
+          "label": "B",
+          "text": "An analysis of eDNA can detect the presence of invasive species that are difficult to observe, such as constrictor snakes.",
+          "format": "text"
+        },
+        {
+          "label": "C",
+          "text": "Researchers found Burmese python eDNA, or environmental DNA, in water samples; eDNA is the DNA in released cellular materials, such as shed skin cells.",
+          "format": "text"
+        },
+        {
+          "label": "D",
+          "text": "Sara Oyler-McCance’s researchers analyzed environmental DNA (eDNA) — that is, DNA from cellular materials released by organisms — in water samples from the Florida Everglades.",
+          "format": "text"
+        }
+      ],
+      "correct": {
+        "labels": [
+          "A"
+        ],
+        "values": []
+      },
+      "explanation": {
+        "text": "Choice A is the best answer. This choice presents the study in a way that assumes the audience is already familiar with eDNA.\n\nChoice B is incorrect. This choice doesn’t present the study. It only states a general fact about eDNA analysis. Choice C is incorrect. This choice isn’t suited for an audience already familiar with eDNA. A familiar audience wouldn’t need to have the term defined or explained. Choice D is incorrect. This choice isn’t suited for an audience already familiar with eDNA. A familiar audience wouldn’t need to have the term defined or explained. It also doesn’t present the study.",
+        "format": "text"
+      },
+      "figures": [],
+      "tags": [
+        "export-2026-09-18"
       ],
       "flags": [],
       "needs_review": false
@@ -28254,6 +28759,69 @@
       "needs_review": false
     },
     {
+      "id": "cb:d3b7d7a3",
+      "source_ids": [
+        "cb:d3b7d7a3"
+      ],
+      "source": {
+        "file": "questionbank-export-2026-9-18.pdf",
+        "page": 6,
+        "tier": "A",
+        "trust": "official"
+      },
+      "section": "reading_writing",
+      "domain": "Expression of Ideas",
+      "skill": "Transitions",
+      "difficulty": "hard",
+      "stimulus": {
+        "text": "Many historical accounts of the 1930s focus on the widespread movement of people from dust bowl – ravaged Great Plains states to faraway California. However, a 2016 study of 1940 census data complicates this popular narrative; ______ researchers determined, migrants in states hardest hit by prolonged droughts and dust storms — Colorado, Kansas, Oklahoma, and Texas — merely relocated within the region.",
+        "format": "text"
+      },
+      "stem": {
+        "text": "Which choice completes the text with the most logical transition?",
+        "format": "text"
+      },
+      "response_type": "mcq",
+      "choices": [
+        {
+          "label": "A",
+          "text": "for this reason,",
+          "format": "text"
+        },
+        {
+          "label": "B",
+          "text": "more often,",
+          "format": "text"
+        },
+        {
+          "label": "C",
+          "text": "additionally,",
+          "format": "text"
+        },
+        {
+          "label": "D",
+          "text": "nevertheless,",
+          "format": "text"
+        }
+      ],
+      "correct": {
+        "labels": [
+          "B"
+        ],
+        "values": []
+      },
+      "explanation": {
+        "text": "Choice B is the best answer. “More often” logically signals that the historical outcome in this clause — dust bowl migrants’ relocation within the Great Plains region — was more common than the movement to California described in many historical accounts.\n\nChoice A is incorrect because “for this reason” illogically signals that the historical outcome in this clause was caused by either the narrative about widespread movement to California or the 2016 study’s complication of that narrative. Instead, dust bowl migrants’ regional relocation was found to be more common than the movement to California described in many historical accounts. Choice C is incorrect because “additionally” illogically signals that the historical outcome in this clause merely adds to either the narrative about widespread movement to California or the 2016 study’s complication of that narrative. Instead, dust bowl migrants’ regional relocation was found to be more common than the movement to California described in many historical accounts. Choice D is incorrect because “nevertheless” illogically signals that the historical outcome in this clause is true despite either the narrative about widespread movement to California or the 2016 study’s complication of that narrative. While the findings about dust bowl migrants’ regional relocation did challenge the previous narrative, they did not challenge the study’s findings, and this choice creates a confusing ambiguity. Instead, dust bowl migrants’ regional relocation was found to be more common than the movement to California described in many historical accounts.",
+        "format": "text"
+      },
+      "figures": [],
+      "tags": [
+        "export-2026-09-18"
+      ],
+      "flags": [],
+      "needs_review": false
+    },
+    {
       "id": "cb:d46ac7e7",
       "source_ids": [
         "cb:d46ac7e7"
@@ -30022,6 +30590,69 @@
       "figures": [],
       "tags": [
         "export-2026-07-13"
+      ],
+      "flags": [],
+      "needs_review": false
+    },
+    {
+      "id": "cb:e0bd4f8a",
+      "source_ids": [
+        "cb:e0bd4f8a"
+      ],
+      "source": {
+        "file": "questionbank-export-2026-9-18.pdf",
+        "page": 3,
+        "tier": "A",
+        "trust": "official"
+      },
+      "section": "reading_writing",
+      "domain": "Expression of Ideas",
+      "skill": "Transitions",
+      "difficulty": "easy",
+      "stimulus": {
+        "text": "In 1942, the 1,500-mile Alaska Highway was constructed in under nine months, largely due to the skilled work of nearly 4,000 African American soldiers from US Army engineering regiments. The soldiers’ contribution was overlooked for decades. ______ in 2017, lawmakers declared October 25 a day of recognition —“Alaska Highway Day”— for the troops who helped build this critical roadway.",
+        "format": "text"
+      },
+      "stem": {
+        "text": "Which choice completes the text with the most logical transition?",
+        "format": "text"
+      },
+      "response_type": "mcq",
+      "choices": [
+        {
+          "label": "A",
+          "text": "Lastly,",
+          "format": "text"
+        },
+        {
+          "label": "B",
+          "text": "Then,",
+          "format": "text"
+        },
+        {
+          "label": "C",
+          "text": "Similarly,",
+          "format": "text"
+        },
+        {
+          "label": "D",
+          "text": "For example,",
+          "format": "text"
+        }
+      ],
+      "correct": {
+        "labels": [
+          "B"
+        ],
+        "values": []
+      },
+      "explanation": {
+        "text": "Choice B is the best answer. \"Then\" logically signals that the event described in this sentence — lawmakers’ 2017 declaration of Alaska Highway Day — is part of a chronological sequence of events, occurring after the decades-long period in which the soldiers’ contribution was overlooked.\n\nChoice A is incorrect because \"lastly\" illogically signals that this sentence presents the last of a series of points or reasons. Instead, it describes a later event occurring in a chronological sequence of events. Choice C is incorrect because \"similarly\" illogically signals that the information in this sentence is similar to the previous information about the soldiers’ contribution being overlooked for decades. Instead, it describes an event occurring after that decades-long period. Choice D is incorrect because \"for example\" illogically signals that this sentence provides an example illustrating the previous information about the soldiers’ contribution being overlooked for decades. Instead, it describes an event occurring after that decades-long period.",
+        "format": "text"
+      },
+      "figures": [],
+      "tags": [
+        "export-2026-09-18"
       ],
       "flags": [],
       "needs_review": false

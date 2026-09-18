@@ -7,12 +7,12 @@ import { applyFilters, countActive, type FilterContext } from './lib/filter'
 import {
   CURSOR_STORAGE_KEY,
   exportHistory,
-  FILTERS_STORAGE_KEY,
   parseHistory,
   SEED_STORAGE_KEY,
   seenQuestionIds,
   statsBy,
   useAttempts,
+  useFilters,
   useNamedSets,
   usePersisted,
   wrongQuestionIds,
@@ -52,10 +52,15 @@ export default function App() {
   const [cursor, setCursor] = useState(0)
 
   const [seed, setSeed] = usePersisted<number>(SEED_STORAGE_KEY, 1)
-  const [filters, setFilters] = usePersisted<Filters>(FILTERS_STORAGE_KEY, EMPTY_FILTERS)
+  const [filters, setFilters] = useFilters()
   const [lastQuestionId, setLastQuestionId] = usePersisted<string | null>(CURSOR_STORAGE_KEY, null)
   const { attempts, record, merge, clear } = useAttempts()
   const { sets, save: saveSet, remove: removeSet } = useNamedSets()
+
+  /** Answered in this sitting. See `FilterContext.pinned` — these stay in the
+   *  queue so submitting an answer doesn't make the question disappear while
+   *  you're reading the explanation. Cleared whenever the queue is rebuilt. */
+  const [pinned, setPinned] = useState<Set<string>>(() => new Set())
 
   const sessionStart = useRef(Date.now())
   const [sessionMs, setSessionMs] = useState(0)
@@ -81,12 +86,26 @@ export default function App() {
 
   const seen = useMemo(() => seenQuestionIds(attempts), [attempts])
   const wrong = useMemo(() => wrongQuestionIds(attempts), [attempts])
-  const ctx: FilterContext = useMemo(() => ({ seen, wrong, sets }), [seen, wrong, sets])
+  const ctx: FilterContext = useMemo(
+    () => ({ seen, wrong, sets, pinned }),
+    [seen, wrong, sets, pinned],
+  )
 
   const matched = useMemo(() => {
     const out = applyFilters(all, filters, ctx)
     return filters.shuffle ? shuffled(out, seed) : out
   }, [all, filters, ctx, seed])
+
+  /** Empty because you've answered everything here, rather than because the
+   *  filters are contradictory — two different situations needing two
+   *  different suggestions. */
+  const exhausted = useMemo(
+    () =>
+      filters.unseenOnly &&
+      !matched.length &&
+      applyFilters(all, { ...filters, unseenOnly: false }, ctx).length > 0,
+    [filters, matched.length, all, ctx],
+  )
 
   const weakestSkill = useMemo(() => {
     const rows = statsBy(attempts, (id) => byId.get(id)?.skill ?? null).filter(
@@ -128,6 +147,7 @@ export default function App() {
     (answer: string, correct: boolean, ms: number) => {
       if (!current) return
       record({ questionId: current.id, answer, correct, ms, at: new Date().toISOString() })
+      setPinned((prev) => new Set(prev).add(current.id))
     },
     [current, record],
   )
@@ -154,6 +174,8 @@ export default function App() {
       .then((t) => {
         const { attempts: inc } = parseHistory(t)
         merge(inc)
+        // Imported answers are answers: rebuild so "no repeats" applies to them.
+        newBatch()
         alert(`Imported ${inc.length} attempts.`)
       })
       .catch((e) => alert(`Import failed: ${e.message}`))
@@ -163,10 +185,20 @@ export default function App() {
     (f: Filters) => {
       setSeed((prev) => (f.shuffle && !filters.shuffle ? Date.now() % 100000 : prev))
       setFilters(f)
+      // Changing the filters is a new queue, so questions answered under the
+      // old one stop being pinned and "no repeats" applies to them properly.
+      setPinned(new Set())
       setCursor(0)
     },
-    [filters.shuffle, setFilters],
+    [filters.shuffle, setFilters, setSeed],
   )
+
+  /** Drop everything answered so far out of the queue and start again at 1,
+   *  without touching the filters. What you want after a long sitting. */
+  const newBatch = useCallback(() => {
+    setPinned(new Set())
+    setCursor(0)
+  }, [])
 
   if (loadError) {
     return (
@@ -194,6 +226,9 @@ export default function App() {
         weakestSkill={weakestSkill}
         setFilters={updateFilters}
         matched={matched}
+        doneCount={seen.size}
+        answeredThisBatch={pinned.size}
+        onNewBatch={newBatch}
         sets={sets}
         onSaveSet={(name) =>
           saveSet(
@@ -226,7 +261,14 @@ export default function App() {
           </label>
           <button
             onClick={() => {
-              if (confirm(`Delete all ${attempts.length} recorded attempts?`)) clear()
+              if (
+                confirm(
+                  `Delete all ${attempts.length} recorded attempts? This is what "No repeats" runs on — every question becomes unanswered again.`,
+                )
+              ) {
+                clear()
+                newBatch()
+              }
             }}
             className="rounded-lg border border-red-300 px-2.5 py-1.5 text-red-700 dark:border-red-900 dark:text-red-400"
           >
@@ -313,17 +355,57 @@ export default function App() {
             />
           ) : (
             <div className="grid h-full place-items-center px-6 text-center">
-              <div>
-                <p className="mb-3 text-sm font-medium text-slate-700 dark:text-slate-200">
-                  No questions match these filters.
-                </p>
-                <button
-                  onClick={() => updateFilters({ ...EMPTY_FILTERS, shuffle: filters.shuffle })}
-                  className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs dark:border-slate-600"
-                >
-                  Reset filters
-                </button>
-              </div>
+              {exhausted ? (
+                <div className="max-w-sm">
+                  <p className="mb-1 text-sm font-medium text-slate-700 dark:text-slate-200">
+                    Nothing left here — you've answered all of it.
+                  </p>
+                  <p className="mb-4 text-xs text-slate-500">
+                    {seen.size} of {all.length} in the bank done. Widen the filters for more, or go
+                    back over the ones you got wrong.
+                  </p>
+                  <div className="flex flex-wrap justify-center gap-2">
+                    <button
+                      onClick={() =>
+                        updateFilters({ ...EMPTY_FILTERS, shuffle: filters.shuffle })
+                      }
+                      className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs dark:border-slate-600"
+                    >
+                      Everything unseen
+                    </button>
+                    <button
+                      onClick={() =>
+                        updateFilters({
+                          ...filters,
+                          unseenOnly: false,
+                          wrongOnly: true,
+                        })
+                      }
+                      className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs dark:border-slate-600"
+                    >
+                      My mistakes
+                    </button>
+                    <button
+                      onClick={() => updateFilters({ ...filters, unseenOnly: false })}
+                      className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs dark:border-slate-600"
+                    >
+                      Allow repeats
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <p className="mb-3 text-sm font-medium text-slate-700 dark:text-slate-200">
+                    No questions match these filters.
+                  </p>
+                  <button
+                    onClick={() => updateFilters({ ...EMPTY_FILTERS, shuffle: filters.shuffle })}
+                    className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs dark:border-slate-600"
+                  >
+                    Reset filters
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </main>

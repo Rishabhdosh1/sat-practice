@@ -5,6 +5,17 @@ export type FilterContext = {
   seen: Set<string>
   wrong: Set<string>
   sets: NamedSet[]
+  /**
+   * Questions answered since the queue was built, kept in it anyway.
+   *
+   * Without this, "no repeats" eats the question you are looking at: you
+   * submit, `seen` grows, the question stops matching and vanishes mid-render
+   * — so the explanation you were about to read is replaced by the next
+   * question, and `←` can't get you back. Pinning holds the queue still until
+   * it is deliberately rebuilt. Same for "my mistakes" and a question you just
+   * got right.
+   */
+  pinned: Set<string>
 }
 
 export type FacetKey = 'sections' | 'domains' | 'skills' | 'difficulties' | 'tags' | 'sets'
@@ -50,8 +61,9 @@ export function matches(
     if (ids && !ids.has(q.id)) return false
   }
 
-  if (filters.unseenOnly && ctx.seen.has(q.id)) return false
-  if (filters.wrongOnly && !ctx.wrong.has(q.id)) return false
+  const pinned = ctx.pinned.has(q.id)
+  if (filters.unseenOnly && !pinned && ctx.seen.has(q.id)) return false
+  if (filters.wrongOnly && !pinned && !ctx.wrong.has(q.id)) return false
   if (filters.hideUnverified && q.source.trust !== 'official') return false
   return true
 }
@@ -122,6 +134,14 @@ export function skillsByDomain(all: Question[]): Map<string, string[]> {
   return new Map([...m.entries()].map(([k, v]) => [k, [...v].sort()]))
 }
 
+/**
+ * How many filters are narrowing the set — the badge on the Filters button, and
+ * whether Reset has anything to do.
+ *
+ * `unseenOnly` is deliberately not counted. It is on by default and Reset keeps
+ * it (like shuffle), so counting it would leave "Reset" lit permanently with
+ * nothing to reset.
+ */
 export function countActive(f: Filters): number {
   return (
     f.sections.length +
@@ -130,7 +150,6 @@ export function countActive(f: Filters): number {
     f.difficulties.length +
     f.tags.length +
     f.sets.length +
-    (f.unseenOnly ? 1 : 0) +
     (f.wrongOnly ? 1 : 0) +
     (f.hideUnverified ? 1 : 0)
   )

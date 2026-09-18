@@ -102,6 +102,9 @@ export function FiltersPanel({
   onSaveSet,
   onDeleteSet,
   weakestSkill,
+  doneCount,
+  answeredThisBatch,
+  onNewBatch,
 }: {
   all: Question[]
   filters: Filters
@@ -112,6 +115,11 @@ export function FiltersPanel({
   onSaveSet: (name: string) => void
   onDeleteSet: (name: string) => void
   weakestSkill: string | null
+  /** Questions answered at least once, ever. */
+  doneCount: number
+  /** Answered in this sitting — still in the queue, see `FilterContext.pinned`. */
+  answeredThisBatch: number
+  onNewBatch: () => void
 }) {
   const [skillQuery, setSkillQuery] = useState('')
 
@@ -193,9 +201,8 @@ export function FiltersPanel({
     ...filters.difficulties.map((v) => ({ label: v, onRemove: () => toggle('difficulties', v) })),
     ...filters.tags.map((v) => ({ label: v, onRemove: () => toggle('tags', v) })),
     ...filters.sets.map((v) => ({ label: `set: ${v}`, onRemove: () => toggle('sets', v) })),
-    ...(filters.unseenOnly
-      ? [{ label: 'unseen only', onRemove: () => setFilters({ ...filters, unseenOnly: false }) }]
-      : []),
+    // unseenOnly has its own switch above and is on by default; a pill for it
+    // would sit there permanently saying nothing.
     ...(filters.wrongOnly
       ? [{ label: 'my mistakes', onRemove: () => setFilters({ ...filters, wrongOnly: false }) }]
       : []),
@@ -211,17 +218,13 @@ export function FiltersPanel({
 
   const presets: { label: string; hint: string; apply: () => void; on: boolean }[] = [
     {
-      label: 'Unseen',
-      hint: 'never answered',
-      on: filters.unseenOnly,
-      apply: () =>
-        setFilters({ ...filters, unseenOnly: !filters.unseenOnly, wrongOnly: false }),
-    },
-    {
       label: 'My mistakes',
       hint: 'latest attempt wrong',
       on: filters.wrongOnly,
-      apply: () => setFilters({ ...filters, wrongOnly: !filters.wrongOnly, unseenOnly: false }),
+      // Mutually exclusive with "no repeats" — a mistake is a question you have
+      // by definition already seen. Switching mistakes back off restores it.
+      apply: () =>
+        setFilters({ ...filters, wrongOnly: !filters.wrongOnly, unseenOnly: filters.wrongOnly }),
     },
     {
       label: 'Hard only',
@@ -282,6 +285,47 @@ export function FiltersPanel({
             className="rounded border border-slate-300 px-2 py-0.5 text-xs dark:border-slate-600"
           >
             Reset
+          </button>
+        )}
+      </div>
+
+      {/* no repeats — the default mode, not one filter among many --------- */}
+      <div
+        className={`mt-2 rounded-lg border px-3 py-2 transition ${
+          filters.unseenOnly
+            ? 'border-emerald-500/60 bg-emerald-50 dark:border-emerald-700 dark:bg-emerald-950/40'
+            : 'border-slate-300 dark:border-slate-700'
+        }`}
+      >
+        <label className="flex cursor-pointer items-center gap-2">
+          <input
+            type="checkbox"
+            checked={filters.unseenOnly}
+            onChange={(e) =>
+              setFilters({ ...filters, unseenOnly: e.target.checked, wrongOnly: false })
+            }
+            className="h-4 w-4 shrink-0 rounded border-slate-400"
+          />
+          <span className="flex-1 text-xs font-medium text-slate-800 dark:text-slate-100">
+            No repeats
+          </span>
+          <span className="text-[11px] tabular-nums text-slate-500">
+            {doneCount} / {all.length} done
+          </span>
+        </label>
+        <p className="mt-1 pl-6 text-[11px] leading-snug text-slate-500">
+          {filters.unseenOnly
+            ? 'Only questions you have never answered. Your history is saved, so this holds across launches.'
+            : 'Off — questions you have already answered can come round again.'}
+        </p>
+        {answeredThisBatch > 0 && (
+          <button
+            type="button"
+            onClick={onNewBatch}
+            title="Drop the ones you just answered out of the queue and restart at 1"
+            className="ml-6 mt-1.5 rounded border border-slate-300 px-2 py-0.5 text-[11px] text-slate-600 dark:border-slate-600 dark:text-slate-300"
+          >
+            Fresh batch ({answeredThisBatch} answered)
           </button>
         )}
       </div>

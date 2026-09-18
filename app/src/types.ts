@@ -72,6 +72,14 @@ export type Filters = {
   hideUnverified: boolean
 }
 
+/**
+ * The no-filters baseline — also what Reset restores.
+ *
+ * `unseenOnly` starts **on**: the point of the app is to get through the bank
+ * once, so a question you have already answered should not come round again
+ * unless you ask for it. Reset and "Practise one topic" both carry it (and
+ * shuffle) across rather than silently letting 700 answered questions back in.
+ */
 export const EMPTY_FILTERS: Filters = {
   sections: [],
   domains: [],
@@ -79,7 +87,7 @@ export const EMPTY_FILTERS: Filters = {
   difficulties: [],
   tags: [],
   sets: [],
-  unseenOnly: false,
+  unseenOnly: true,
   wrongOnly: false,
   shuffle: false,
   hideUnverified: false,

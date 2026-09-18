@@ -4,7 +4,7 @@ A local SAT drill app. No auth, no backend, no deploy — a Vite dev server and 
 JSON file. Built because the official interface shows you the answer before you
 have committed to one.
 
-**691 questions**, ingested from raw PDFs in `~/Downloads`.
+**701 questions**, ingested from raw PDFs in `~/Downloads`.
 
 ## Run it
 
@@ -36,16 +36,16 @@ URL it prints works from a phone on the same Wi-Fi.
 
 | | |
 |---|---:|
-| Total questions | 691 |
-| Reading and Writing | 691 |
+| Total questions | 701 |
+| Reading and Writing | 701 |
 | Math | 0 — see below |
 | With figures | 7 |
-| Official College Board answers | 538 |
+| Official College Board answers | 548 |
 | Unverified answers (Latin roots) | 153 |
 
 By skill: Boundaries 210 · Form, Structure, and Sense 207 · Words in Context 171 ·
-Transitions 21 · Command of Evidence 19 · Inferences 19 · Central Ideas and
-Details 18 · Rhetorical Synthesis 12 · Text Structure and Purpose 11 ·
+Transitions 26 · Command of Evidence 19 · Inferences 19 · Central Ideas and
+Details 18 · Rhetorical Synthesis 17 · Text Structure and Purpose 11 ·
 Cross-Text Connections 3.
 
 ### There is no Math yet, on purpose
@@ -56,7 +56,7 @@ front matter that their answers are not from an official key. Shipping those
 would mean drilling against answers that might be wrong.
 
 The fix is one export: pull **Math** from the same College Board SAT Suite
-Question Bank that produced the three files already ingested, drop it in
+Question Bank that produced the four files already ingested, drop it in
 `~/Downloads`, add the filename to `CB_EXPORTS` in `ingest/run.py`, and re-run.
 It uses the identical format, so no parser changes are needed — grid-in answers,
 the math domain taxonomy, KaTeX rendering and the Desmos panel are already
@@ -73,6 +73,24 @@ and stays centred in whatever space is left, so full screen widens the margins
 rather than stretching the lines. The action bar is part of the layout, not
 floating over it, so it never covers the last choice.
 
+**No repeats** is the default, and sits at the top of the Filters panel rather
+than buried among the facets: a question you have already answered does not come
+round again. It runs off the attempt history, which is persistent, so it holds
+across launches and across app rebuilds — not just within a session. The switch
+carries its own `done / 701` counter, and Reset keeps it on (like Shuffle)
+instead of quietly letting 700 answered questions back in. Turn it off to allow
+repeats; turn on **My mistakes** to deliberately go back over the ones you got
+wrong.
+
+The queue it builds is *held still* while you work through it. Answering a
+question would otherwise make it stop matching and vanish mid-render — you'd
+submit and the explanation you were about to read would be replaced by the next
+question, with no way back. So questions answered in the current sitting stay
+pinned in place until the queue is deliberately rebuilt, which happens when you
+change a filter, press **Fresh batch**, or relaunch. The `done` counter and the
+header progress bar still tick up live, so you can watch the number move without
+the list moving under you.
+
 **Filters** are faceted, like a good search UI:
 
 - **Counts are contextual.** Every option shows how many questions you'd get if
@@ -82,8 +100,8 @@ floating over it, so it never covers the last choice.
 - **Skills are grouped under their domain**, and pick a domain and the skill list
   narrows to just that domain's. There's a search box for jumping straight to one.
 - **Active filters show as removable pills** at the top, with a live
-  "185 of 691 questions" count and one-tap Reset.
-- **Presets**: Unseen · My mistakes · Hard only · Official only, plus
+  "185 of 701 questions" count and one-tap Reset.
+- **Presets**: My mistakes · Hard only · Official only, plus
   **Drill \<skill\>** for your weakest skill once you've answered enough to have
   a weakest one.
 - **Shuffle** is in the header. Worth leaving on for the Latin-roots set, whose
@@ -92,9 +110,10 @@ floating over it, so it never covers the last choice.
   later ("August 2026 additions").
 
 **Practise one topic** sits at the top of the panel: one tap drops every other
-filter and leaves you with a single domain — Expression of Ideas (33), Craft and
+filter and leaves you with a single domain — Expression of Ideas (43), Craft and
 Structure (185), Information and Ideas (56) or Standard English Conventions
-(417). Tap it again to go back to everything. The Domain list further down *adds*
+(417) — counted as *unseen* questions, which is what the tap actually gives
+you. Tap it again to go back to everything. The Domain list further down *adds*
 to what's already selected, which is what you want when assembling a set and not
 what you want when you're drilling one weak area.
 
@@ -104,7 +123,7 @@ something you now know doesn't inflate the number.
 
 **History** — every attempt, your filters, the shuffle order and the question
 you were last on — lives in `localStorage` and is restored on the next launch,
-so closing the app picks up where you left off rather than back at 1 / 691. The
+so closing the app picks up where you left off rather than back at 1 / 701. The
 resume is stored as a question *id*, not an index: if the filters no longer
 match that question the app falls back to the start of the set rather than
 landing on an unrelated question that happens to sit at the same number.
@@ -145,7 +164,7 @@ docs/SOURCES.md  what was ingested, what was rejected, and why
 - **Validated.** Duplicate ids, empty stems, missing or non-existent correct
   answers, odd choice counts and missing figure files all fail the run.
 
-Currently: 691 written, 0 validation failures, 1 note (one question appears in
+Currently: 701 written, 0 validation failures, 1 note (one question appears in
 two exports; the copies are identical, one is kept).
 
 ## Schema

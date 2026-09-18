@@ -65,7 +65,7 @@ def test_dataset() -> None:
     qs = d["questions"]
 
     check("schema version", d["schema_version"] == 1, str(d.get("schema_version")))
-    check("question count", len(qs) == 691, f"got {len(qs)}")
+    check("question count", len(qs) == 701, f"got {len(qs)}")
 
     ids = [q["id"] for q in qs]
     check("ids unique", len(set(ids)) == len(ids), f"{len(ids) - len(set(ids))} dupes")

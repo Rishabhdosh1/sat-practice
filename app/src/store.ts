@@ -1,9 +1,12 @@
 import { useCallback, useEffect, useState } from 'react'
-import type { Attempt, NamedSet } from './types'
+import { EMPTY_FILTERS, type Attempt, type Filters, type NamedSet } from './types'
 
 const ATTEMPTS_KEY = 'sat.attempts.v1'
 const SETS_KEY = 'sat.sets.v1'
-const FILTERS_KEY = 'sat.filters.v1'
+const FILTERS_KEY = 'sat.filters.v2'
+/** Pre-"no repeats" filters. Read once to carry a selection forward; see
+ *  `useFilters`. Never written to again. */
+const FILTERS_KEY_V1 = 'sat.filters.v1'
 const CURSOR_KEY = 'sat.cursor.v1'
 const SEED_KEY = 'sat.seed.v1'
 
@@ -32,6 +35,33 @@ export function usePersisted<T>(key: string, initial: T) {
     write(key, value)
   }, [key, value])
   return [value, setValue] as const
+}
+
+/**
+ * Filters, with a one-time migration off the pre-"no repeats" key.
+ *
+ * "Don't show me a question twice" is now the default, but a returning user has
+ * `unseenOnly: false` already sitting in localStorage, and a default only ever
+ * applies to a first run. So v1 is read once, its selections are carried over,
+ * and "no repeats" is switched on — after which v2 is the only key touched.
+ * Attempt history is untouched by any of this: it lives under its own key and
+ * is what the whole feature depends on.
+ *
+ * `wrongOnly` has to be dropped on the way through. It means "questions I got
+ * wrong", which is the exact complement of "questions I have never answered" —
+ * carrying both over would migrate the user straight into an empty set.
+ */
+export function useFilters() {
+  const [filters, setFilters] = useState<Filters>(() => {
+    const v2 = read<Filters | null>(FILTERS_KEY, null)
+    if (v2) return { ...EMPTY_FILTERS, ...v2 }
+    const v1 = read<Filters | null>(FILTERS_KEY_V1, null)
+    return v1 ? { ...EMPTY_FILTERS, ...v1, unseenOnly: true, wrongOnly: false } : EMPTY_FILTERS
+  })
+  useEffect(() => {
+    write(FILTERS_KEY, filters)
+  }, [filters])
+  return [filters, setFilters] as const
 }
 
 export function useAttempts() {
@@ -82,7 +112,6 @@ export function useNamedSets() {
   return { sets, save, remove, setSets }
 }
 
-export const FILTERS_STORAGE_KEY = FILTERS_KEY
 /** Id of the question last on screen, so a relaunch resumes where you left off. */
 export const CURSOR_STORAGE_KEY = CURSOR_KEY
 /** Shuffle seed, persisted so a shuffled run keeps its order across launches —
